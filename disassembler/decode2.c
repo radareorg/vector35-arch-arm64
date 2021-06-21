@@ -20136,7 +20136,7 @@ int SADALP_advsimd(context *ctx, Instruction *instr)
 		}
 		ctx->esize = (8) << (UINT(ctx->size));
 		ctx->datasize = (ctx->Q==1) ? 0x80 : 0x40;
-		ctx->elements = ((((2) * (ctx->esize))) ? ((ctx->datasize) / (((2) * (ctx->esize)))) : 0);
+		ctx->elements = ((2 * ctx->esize)!=0) ? ((ctx->datasize) / (((2) * (ctx->esize)))) : 0;
 		ctx->acc = (ctx->op==1);
 		ctx->unsigned_ = (ctx->U==1);
 		OK(ENC_SADALP_ASIMDMISC_P);
@@ -20159,7 +20159,7 @@ int SADDLP_advsimd(context *ctx, Instruction *instr)
 		}
 		ctx->esize = (8) << (UINT(ctx->size));
 		ctx->datasize = (ctx->Q==1) ? 0x80 : 0x40;
-		ctx->elements = ((((2) * (ctx->esize))) ? ((ctx->datasize) / (((2) * (ctx->esize)))) : 0);
+		ctx->elements = ((2 * ctx->esize)!=0) ? ((ctx->datasize) / (((2) * (ctx->esize)))) : 0;
 		ctx->acc = (ctx->op==1);
 		ctx->unsigned_ = (ctx->U==1);
 		OK(ENC_SADDLP_ASIMDMISC_P);
@@ -28008,7 +28008,7 @@ int UADALP_advsimd(context *ctx, Instruction *instr)
 		}
 		ctx->esize = (8) << (UINT(ctx->size));
 		ctx->datasize = (ctx->Q==1) ? 0x80 : 0x40;
-		ctx->elements = ((((2) * (ctx->esize))) ? ((ctx->datasize) / (((2) * (ctx->esize)))) : 0);
+		ctx->elements = ((2 * ctx->esize)!=0) ? ((ctx->datasize) / (((2) * (ctx->esize)))) : 0;
 		ctx->acc = (ctx->op==1);
 		ctx->unsigned_ = (ctx->U==1);
 		OK(ENC_UADALP_ASIMDMISC_P);
@@ -28031,7 +28031,7 @@ int UADDLP_advsimd(context *ctx, Instruction *instr)
 		}
 		ctx->esize = (8) << (UINT(ctx->size));
 		ctx->datasize = (ctx->Q==1) ? 0x80 : 0x40;
-		ctx->elements = ((((2) * (ctx->esize))) ? ((ctx->datasize) / (((2) * (ctx->esize)))) : 0);
+		ctx->elements = ((2 * ctx->esize)!=0) ? ((ctx->datasize) / (((2) * (ctx->esize)))) : 0;
 		ctx->acc = (ctx->op==1);
 		ctx->unsigned_ = (ctx->U==1);
 		OK(ENC_UADDLP_ASIMDMISC_P);
@@ -30999,6 +30999,27 @@ int and_p_p_pp(context *ctx, Instruction *instr)
 		if(ctx->S==0 && ctx->Pn==ctx->Pm) return MOV_and_p_p_pp(ctx, instr);
 		OK(ENC_AND_P_P_PP_Z);
 	}
+#if 0
+	/* class iclass_s */
+	/* 00100101|op=0|S=1|00|Pm=xxxx|01|Pg=xxxx|o2=0|Pn=xxxx|o3=0|Pd=xxxx */
+	if((INSWORD & 0xFFF0C210)==0x25404000) {
+		decode_fields32(ENC_ANDS_P_P_PP_Z, ctx, instr);
+		if(!HaveSVE()) {
+			UNDEFINED;
+		}
+		ctx->esize = 8;
+		ctx->g = UINT(ctx->Pg);
+		ctx->n = UINT(ctx->Pn);
+		ctx->m = UINT(ctx->Pm);
+		ctx->d = UINT(ctx->Pd);
+		instr->setflags = TRUE;
+		ctx->setflags = TRUE;
+		/* regular aliases */
+		if(ctx->S==1 && ctx->Pn==ctx->Pm) return MOVS_and_p_p_pp(ctx, instr);
+		if(ctx->S==0 && ctx->Pn==ctx->Pm) return MOV_and_p_p_pp(ctx, instr);
+		OK(ENC_ANDS_P_P_PP_Z);
+	}
+#endif
 	return rc;
 }
 
