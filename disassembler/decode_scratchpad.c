@@ -703,8 +703,8 @@ const char *reg_lookup_c[16] = {
 
 #define ADD_OPERAND_FLOAT32(VALUE) \
 	instr->operands[i].operandClass = FIMM32; \
-	*(float *)&(instr->operands[i].immediate) = VALUE; \
-	i++;
+	union { unsigned int ui; float fn; } *v = &(inst->operands[i].immediate); \
+	v->ui = VALUE; i++;
 
 #define ADD_OPERAND_CONST ADD_OPERAND_IMM64(const_, 0)
 #define ADD_OPERAND_FBITS ADD_OPERAND_IMM32(fbits, 0)
