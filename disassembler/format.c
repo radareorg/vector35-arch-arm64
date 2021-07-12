@@ -376,8 +376,8 @@ uint32_t get_shifted_immediate(const InstructionOperand *instructionOperand, cha
 	}
 	if (type == FIMM32)
 	{
-		float f = *(const float*)&instructionOperand->immediate;
-		if (snprintf(outBuffer, outBufferSize, "#%.08f%s", f, shiftBuff) >= outBufferSize)
+		ImmFloatUnion *ifu = (ImmFloatUnion*)(&instructionOperand->immediate);
+		if (snprintf(outBuffer, outBufferSize, "#%.08f%s", ifu->fn, shiftBuff) >= outBufferSize)
 			return FAILED_TO_DISASSEMBLE_OPERAND;
 	}
 	else if (type == IMM32)

@@ -703,8 +703,8 @@ const char *reg_lookup_c[16] = {
 
 #define ADD_OPERAND_FLOAT32(VALUE) \
 	instr->operands[i].operandClass = FIMM32; \
-	union { unsigned int ui; float fn; } *v = &(inst->operands[i].immediate); \
-	v->ui = VALUE; i++;
+	ImmFloatUnion *ifu = (ImmFloatUnion *)&(instr->operands[i].immediate); \
+	ifu->ui = VALUE; i++;
 
 #define ADD_OPERAND_CONST ADD_OPERAND_IMM64(const_, 0)
 #define ADD_OPERAND_FBITS ADD_OPERAND_IMM32(fbits, 0)
@@ -3743,7 +3743,7 @@ int decode_scratchpad(context *ctx, Instruction *instr)
 		case ENC_MOV_INS_ASIMDINS_IV_V:
 		{
 			ArrangementSpec arr_spec = size_spec_method3(ctx->imm5);
-
+#if UNUSED
 			uint64_t INDEX1=0, INDEX2=0;
 			if((ctx->imm5 & 1) == 1) {
 				INDEX1 = (ctx->imm5>>1) & 15;
@@ -3761,7 +3761,7 @@ int decode_scratchpad(context *ctx, Instruction *instr)
 				INDEX1 = (ctx->imm5>>4) & 1;
 				INDEX2 = (ctx->imm4>>3) & 1;
 			}
-
+#endif
 			// <Vd>.<T>[<index1>],<Vn>.<T>[<index2>]
 			ADD_OPERAND_VREG_T_LANE(ctx->d, arr_spec, ctx->dst_index);
 			ADD_OPERAND_VREG_T_LANE(ctx->n, arr_spec, ctx->src_index);
@@ -7151,6 +7151,7 @@ int decode_scratchpad(context *ctx, Instruction *instr)
 			ADD_OPERAND_NAME(prfop);
 			ADD_OPERAND_PRED_REG(ctx->g);
 			ADD_OPERAND_MEM_REG_OFFSET_VL(REGSET_SP, REG_X_BASE, ctx->n, imm);
+#if UNUSED
 			unsigned factor;
 			switch(instr->encoding) {
 				//case ENC_PRFH_I_P_BI_S: factor = 2; break;
@@ -7158,6 +7159,7 @@ int decode_scratchpad(context *ctx, Instruction *instr)
 				//case ENC_PRFD_I_P_BI_S: factor = 8; break;
 				default: factor = 1;
 			}
+#endif
 			break;
 		}
 		case ENC_PRFB_I_P_AI_D:

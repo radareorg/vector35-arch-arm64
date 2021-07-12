@@ -296,7 +296,7 @@ uint64_t Replicate(uint64_t val, uint8_t times, uint64_t width)
 	https://github.com/Siguza/iometa/blob/master/src/a64.c */
 uint64_t AdvSIMDExpandImm(uint8_t op, uint8_t cmode, uint64_t imm8)
 {
-	uint64_t imm64;
+	uint64_t imm64 = 0;
 	switch((cmode >> 1) & 0b111)
 	{
 		case 0b000:
@@ -468,7 +468,7 @@ uint64_t FPOne(bool sign, int N)
 uint64_t FPTwo(bool sign, int N)
 {
 	// width should be 16, 32, 64
-	int E, F, exp;
+	int E, exp;
 
 	switch(N) {
 		case 16: E=5;
@@ -476,7 +476,9 @@ uint64_t FPTwo(bool sign, int N)
 		default: E=11;
 	}
 
-	F = N - (E+1);
+#if UNUSED
+	int F = N - (E+1);
+#endif
 	exp = 1<<(E-1);
 	return (sign<<E)|exp;
 }

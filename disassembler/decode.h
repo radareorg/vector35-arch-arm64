@@ -19,6 +19,11 @@
 #define restrict __restrict
 #endif
 
+typedef union {
+	unsigned int ui;
+	float fn;
+} ImmFloatUnion;
+
 /* these are used in lookup tables elsewhere, modify with caution */
 enum ArrangementSpec {
 	ARRSPEC_NONE=0,
