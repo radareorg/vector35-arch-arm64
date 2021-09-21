@@ -11,7 +11,7 @@
 // Similarily, glibc defines REG_SP/REG_S0 in sys/ucontext.h.
 #undef REG_SP
 #undef REG_S0
-#endie
+#endif
 
 //-----------------------------------------------------------------------------
 // registers (non-system)
