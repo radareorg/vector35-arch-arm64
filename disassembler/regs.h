@@ -2,9 +2,7 @@
 
 #include <stddef.h>
 
-#ifdef _MSC_VER
 #undef REG_NONE // collides with winnt's define
-#endif
 
 #ifdef __riscv
 // On RISC-V musl defines REG_SP/REG_S0 in signal.h.
