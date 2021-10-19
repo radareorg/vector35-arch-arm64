@@ -3,7 +3,7 @@
 #include <stddef.h>
 
 #ifdef _MSC_VER
-	#undef REG_NONE  // collides with winnt's define
+#undef REG_NONE  // collides with winnt's define
 #endif
 
 #ifdef __riscv
