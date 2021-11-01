@@ -1194,13 +1194,14 @@ const char* reg_lookup_c[16] = {"c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7", 
 	instr->operands[i].immediate = eaddr; \
 	i++;
 
-#define ADD_OPERAND_SYSTEMREG_IMPL_SPEC \
+#define ADD_OPERAND_SYSTEMREG_IMPL_SPEC(SR) \
 	instr->operands[i].operandClass = IMPLEMENTATION_SPECIFIC; \
 	instr->operands[i].implspec[0] = ctx->sys_op0; \
 	instr->operands[i].implspec[1] = ctx->sys_op1; \
 	instr->operands[i].implspec[2] = ctx->sys_crn; \
 	instr->operands[i].implspec[3] = ctx->sys_crm; \
 	instr->operands[i].implspec[4] = ctx->sys_op2; \
+	instr->operands[i].sysreg = (SR); \
 	i++;
 
 #define ADD_OPERAND_SYSTEMREG(R) \
@@ -1219,7 +1220,7 @@ const char* reg_lookup_c[16] = {"c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7", 
 		} \
 		else \
 		{ \
-			ADD_OPERAND_SYSTEMREG_IMPL_SPEC; \
+			ADD_OPERAND_SYSTEMREG_IMPL_SPEC(sr); \
 		} \
 	}
 
@@ -9078,7 +9079,7 @@ int decode_scratchpad(context* ctx, Instruction* instr)
 
 		if (sr == SYSREG_NONE)
 		{
-			ADD_OPERAND_SYSTEMREG_IMPL_SPEC;
+			ADD_OPERAND_SYSTEMREG_IMPL_SPEC(sr);
 		}
 		else
 		{
