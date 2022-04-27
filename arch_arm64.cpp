@@ -2936,44 +2936,12 @@ struct LDST_REG_UNSIGNED_IMM{
 	uint32_t size:2;
 };
 
-class Arm64ElfRelocationHandler: public RelocationHandler
-{
-	uint32_t Rd : 5;
-	int32_t immhi : 19;
-	uint32_t group1 : 5;
-	uint32_t immlo : 2;
-	uint32_t op : 1;
-};
-
-struct ADD_SUB_IMM
-{
-	uint32_t Rd : 5;
-	uint32_t Rn : 5;
-	uint32_t imm : 12;
-	uint32_t shift : 2;
-	uint32_t group1 : 5;
-	uint32_t S : 1;
-	uint32_t op : 1;
-	uint32_t sf : 1;
-};
-
-struct UNCONDITIONAL_BRANCH
-{
-	int32_t imm : 26;
-	uint32_t opcode : 5;
-	uint32_t op : 1;
-};
-
-struct LDST_REG_UNSIGNED_IMM
-{
-	uint32_t Rt : 5;
-	uint32_t Rn : 5;
-	uint32_t imm : 12;
-	uint32_t opc : 2;
-	uint32_t group1 : 2;
-	uint32_t V : 1;
-	uint32_t group2 : 3;
-	uint32_t size : 2;
+struct MOV_WIDE_IMM{
+    uint32_t Rd:5;
+    uint32_t imm:16;
+    uint32_t shift:2;
+    uint32_t opcode:6;
+    uint32_t variant:3;
 };
 
 class Arm64ElfRelocationHandler : public RelocationHandler
@@ -3106,11 +3074,31 @@ class Arm64ElfRelocationHandler : public RelocationHandler
 		}
 		case R_AARCH64_MOVW_UABS_G0:
 		case R_AARCH64_MOVW_UABS_G0_NC:
+		{
+			MOV_WIDE_IMM* decode = (MOV_WIDE_IMM*)dest;
+			decode->imm = (target + info.addend);
+			break;
+		}
 		case R_AARCH64_MOVW_UABS_G1:
 		case R_AARCH64_MOVW_UABS_G1_NC:
+		{
+			MOV_WIDE_IMM* decode = (MOV_WIDE_IMM*)dest;
+			decode->imm = (target + info.addend)>>16;
+			break;
+		}
 		case R_AARCH64_MOVW_UABS_G2:
 		case R_AARCH64_MOVW_UABS_G2_NC:
+		{
+			MOV_WIDE_IMM* decode = (MOV_WIDE_IMM*)dest;
+			decode->imm = (target + info.addend)>>32;
+			break;
+		}
 		case R_AARCH64_MOVW_UABS_G3:
+		{
+			MOV_WIDE_IMM* decode = (MOV_WIDE_IMM*)dest;
+			decode->imm = (target + info.addend)>>48;
+			break;
+		}
 		case R_AARCH64_MOVW_SABS_G0:
 		case R_AARCH64_MOVW_SABS_G1:
 		case R_AARCH64_MOVW_SABS_G2:
@@ -3182,6 +3170,15 @@ class Arm64ElfRelocationHandler : public RelocationHandler
 			case R_AARCH64_CALL26:
 			case R_AARCH64_JUMP26:
 				reloc.pcRelative = true;
+				reloc.size = 4;
+				break;
+			case R_AARCH64_MOVW_UABS_G0:
+			case R_AARCH64_MOVW_UABS_G0_NC:
+			case R_AARCH64_MOVW_UABS_G1:
+			case R_AARCH64_MOVW_UABS_G1_NC:
+			case R_AARCH64_MOVW_UABS_G2:
+			case R_AARCH64_MOVW_UABS_G2_NC:
+			case R_AARCH64_MOVW_UABS_G3:
 				reloc.size = 4;
 				break;
 			case R_AARCH64_ABS32:
