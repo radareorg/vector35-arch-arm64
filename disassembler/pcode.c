@@ -568,10 +568,13 @@ uint64_t FPOne(bool sign, int N)
 	{
 	case 16:
 		E = 5;
+		break;
 	case 32:
 		E = 8;
+		break;
 	default:
 		E = 11;
+		break;
 	}
 
 	F = N - (E + 1);
@@ -588,13 +591,16 @@ uint64_t FPTwo(bool sign, int N)
 	{
 	case 16:
 		E = 5;
+		break;
 	case 32:
 		E = 8;
+		break;
 	default:
 		E = 11;
+		break;
 	}
 
-	F = N - (E + 1);
+	// F = N - (E + 1);
 	exp = 1 << (E - 1);
 	return (sign << E) | exp;
 }
@@ -608,10 +614,13 @@ uint64_t FPPointFive(bool sign, int N)
 	{
 	case 16:
 		E = 5;
+		break;
 	case 32:
 		E = 8;
+		break;
 	default:
 		E = 11;
+		break;
 	}
 
 	F = N - (E + 1);
