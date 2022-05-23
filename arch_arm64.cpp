@@ -2390,6 +2390,8 @@ class Arm64ImportedFunctionRecognizer : public FunctionRecognizer
 
 	bool RecognizeMachoPLTEntries(BinaryView* data, Function* func, LowLevelILFunction* il)
 	{
+		DataVariable target;
+
 		if ((il->GetInstructionCount() == 2) || (il->GetInstructionCount() == 3))
 		{
 			// 0: nop OR x16 = symbol@PLT
@@ -2448,7 +2450,19 @@ class Arm64ImportedFunctionRecognizer : public FunctionRecognizer
 			if (jumpOperand.GetSourceRegister<LLIL_REG>() != targetReg)
 				return false;
 
-			data->DefineImportedFunction(sym, func);
+			data->GetDataVariableAtAddress(loadAddrConstant.value, target);
+
+			Ref<Type> funcType = nullptr;
+			if (target.type && target.type->GetClass() == PointerTypeClass &&
+					target.type.GetConfidence() >= BN_MINIMUM_CONFIDENCE)
+			{
+				target.type = target.type->GetChildType();
+				if (target.type && target.type->GetClass() == FunctionTypeClass &&
+						target.type.GetConfidence() >= BN_MINIMUM_CONFIDENCE)
+					funcType = target.type.GetValue();
+			}
+
+			data->DefineImportedFunction(sym, func, funcType);
 			return true;
 		}
 		else if (il->GetInstructionCount() == 4)
@@ -2527,7 +2541,19 @@ class Arm64ImportedFunctionRecognizer : public FunctionRecognizer
 			if (jumpOperand.GetSourceRegister<LLIL_REG>() != targetReg)
 				return false;
 
-			data->DefineImportedFunction(sym, func);
+			data->GetDataVariableAtAddress(loadAddrConstant.value, target);
+
+			Ref<Type> funcType = nullptr;
+			if (target.type && target.type->GetClass() == PointerTypeClass &&
+					target.type.GetConfidence() >= BN_MINIMUM_CONFIDENCE)
+			{
+				target.type = target.type->GetChildType();
+				if (target.type && target.type->GetClass() == FunctionTypeClass &&
+						target.type.GetConfidence() >= BN_MINIMUM_CONFIDENCE)
+					funcType = target.type.GetValue();
+			}
+
+			data->DefineImportedFunction(sym, func, funcType);
 			return true;
 		}
 
