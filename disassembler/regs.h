@@ -6,9 +6,11 @@
 
 #ifdef __riscv
 // On RISC-V musl defines REG_SP/REG_S0 in signal.h.
-// Similarily, glibc defines REG_SP/REG_S0 in sys/ucontext.h.
+// Similarily, glibc defines REG_SP/REG_S0/... in sys/ucontext.h.
 #undef REG_SP
 #undef REG_S0
+#undef REG_S1
+#undef REG_S2
 #endif
 
 //-----------------------------------------------------------------------------
