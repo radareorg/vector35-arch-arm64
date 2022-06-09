@@ -9,6 +9,12 @@
 // Similarily, glibc defines REG_SP/REG_S0 in sys/ucontext.h.
 #undef REG_SP
 #undef REG_S0
+#undef REG_S1
+#undef REG_S2
+#undef REG_S3
+#undef REG_S4
+#undef REG_S5
+#undef REG_S6
 #endif
 
 //-----------------------------------------------------------------------------
