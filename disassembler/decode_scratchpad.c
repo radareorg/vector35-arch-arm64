@@ -1543,7 +1543,8 @@ int decode_scratchpad(context* ctx, Instruction* instr)
 
 	/* default to 0 operands */
 	InstructionOperand zero = {0};
-	for (uint32_t ii = 0; ii < MAX_OPERANDS; ++ii)
+	uint32_t ii;
+	for (ii = 0; ii < MAX_OPERANDS; ++ii)
 		instr->operands[ii] = zero;
 
 	switch (instr->encoding)

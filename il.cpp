@@ -608,8 +608,8 @@ static int unpack_vector(InstructionOperand& oper, Register* result)
 			return 1;
 		}
 
-		int n = v_unpack_lookup_sz[oper.arrSpec];
-		for (int i = 0; i < n; ++i)
+		int i, n = v_unpack_lookup_sz[oper.arrSpec];
+		for (i = 0; i < n; ++i)
 			result[i] = v_unpack_lookup[oper.arrSpec][oper.reg[0] - REG_V0][i];
 		return n;
 	}
@@ -622,8 +622,8 @@ static int unpack_vector(InstructionOperand& oper, Register* result)
 
 			ArrangementSpec spec = promote_spec(oper.arrSpec);
 
-			int n = 0;
-			for (int i = 0; i < 4 && oper.reg[i] != REG_NONE; i++)
+			int i, n = 0;
+			for (i = 0; i < 4 && oper.reg[i] != REG_NONE; i++)
 			{
 				int n_lanes = v_unpack_lookup_sz[spec];
 				if (oper.lane >= n_lanes)
@@ -640,8 +640,8 @@ static int unpack_vector(InstructionOperand& oper, Register* result)
 			if (oper.arrSpec < ARRSPEC_NONE || oper.arrSpec > ARRSPEC_1BYTE)
 				return 0;
 
-			int n = 0;
-			for (int i = 0; i < 4 && oper.reg[i] != REG_NONE; i++)
+			int i, n = 0;
+			for (i = 0; i < 4 && oper.reg[i] != REG_NONE; i++)
 			{
 				result[i] = v_consolidate_lookup[oper.reg[i] - REG_V0][oper.arrSpec];
 				n += 1;
@@ -725,8 +725,8 @@ static void LoadStoreVector(
 	/* if we pre-indexed, base sequential effective addresses off the base register */
 	OperandClass oclass = (oper1.operandClass == MEM_PRE_IDX) ? MEM_REG : oper1.operandClass;
 
-	int offset = 0;
-	for (int i = 0; i < regs_n; ++i)
+	int i, offset = 0;
+	for (i = 0; i < regs_n; ++i)
 	{
 		int rsize = get_register_size(regs[i]);
 		ExprId eaddr = GetILOperandEffectiveAddress(il, oper1, 8, oclass, offset);
@@ -1450,8 +1450,8 @@ bool GetLowLevelILForInstruction(
 			if ((dst_n != src_n) || dst_n == 0)
 				ABORT_LIFT;
 
-			int rsize = get_register_size(dsts[0]);
-			for (int i = 0; i < dst_n; ++i)
+			int i, rsize = get_register_size(dsts[0]);
+			for (i = 0; i < dst_n; ++i)
 				il.AddInstruction(il.FloatAdd(rsize, ILREG(dsts[i]), ILREG(srcs[i])));
 		}
 		break;
@@ -1505,8 +1505,8 @@ bool GetLowLevelILForInstruction(
 			if ((dst_n != src_n) || dst_n == 0)
 				ABORT_LIFT;
 
-			int rsize = get_register_size(dsts[0]);
-			for (int i = 0; i < dst_n; ++i)
+			int i, rsize = get_register_size(dsts[0]);
+			for (i = 0; i < dst_n; ++i)
 				il.AddInstruction(il.FloatSub(rsize, ILREG(dsts[i]), ILREG(srcs[i])));
 		}
 		break;
@@ -1605,8 +1605,8 @@ bool GetLowLevelILForInstruction(
 				float_sz = 8;
 
 			Register regs[16];
-			int dst_n = unpack_vector(operand1, regs);
-			for (int i = 0; i < dst_n; ++i)
+			int i, dst_n = unpack_vector(operand1, regs);
+			for (i = 0; i < dst_n; ++i)
 				il.AddInstruction(ILSETREG(regs[i], GetFloat(il, operand2, float_sz)));
 			break;
 		}
@@ -1734,8 +1734,8 @@ bool GetLowLevelILForInstruction(
 	case ARM64_MOVI:
 	{
 		Register regs[16];
-		int n = unpack_vector(operand1, regs);
-		for (int i = 0; i < n; ++i)
+		int i, n = unpack_vector(operand1, regs);
+		for (i = 0; i < n; ++i)
 			il.AddInstruction(ILSETREG(regs[i], ILCONST_O(get_register_size(regs[i]), operand2)));
 		break;
 	}
@@ -1996,8 +1996,8 @@ bool GetLowLevelILForInstruction(
 		if ((dst_n != src_n) || dst_n == 0)
 			ABORT_LIFT;
 
-		int rsize = get_register_size(dsts[0]);
-		for (int i = 0; i < dst_n; ++i)
+		int i, rsize = get_register_size(dsts[0]);
+		for (i = 0; i < dst_n; ++i)
 		{
 			il.AddInstruction(il.SetRegister(rsize, dsts[i],
 			    il.ShiftLeft(rsize, il.Register(rsize, srcs[i]), il.Const(1, IMM_O(operand3)))));
@@ -2123,6 +2123,7 @@ bool GetLowLevelILForInstruction(
 	case ARM64_UXTL2:
 	{
 		Register srcs[16], dsts[16];
+		int i;
 		int dst_n = unpack_vector(operand1, dsts);
 		int src_n = unpack_vector(operand2, srcs);
 
@@ -2133,7 +2134,7 @@ bool GetLowLevelILForInstruction(
 		if (instr.operation == ARM64_UXTL2 && (src_n != 2 * dst_n))
 			ABORT_LIFT;
 
-		for (int i = 0; i < dst_n; ++i)
+		for (i = 0; i < dst_n; ++i)
 		{
 			if (instr.operation == ARM64_UXTL)
 				il.AddInstruction(ILSETREG(dsts[i], ILREG(srcs[i])));
@@ -2157,8 +2158,8 @@ bool GetLowLevelILForInstruction(
 		if ((dst_n != src_n) || dst_n == 0)
 			ABORT_LIFT;
 
-		int rsize = get_register_size(dsts[0]);
-		for (int i = 0; i < dst_n; ++i)
+		int i, rsize = get_register_size(dsts[0]);
+		for (i = 0; i < dst_n; ++i)
 		{
 			il.AddInstruction(il.SetRegister(rsize, dsts[i],
 			    il.LogicalShiftRight(rsize, il.Register(rsize, srcs[i]), il.Const(1, IMM_O(operand3)))));
@@ -2250,8 +2251,8 @@ bool GetLowLevelILForInstruction(
 		int regs_n = unpack_vector(operand1, regs);
 		if (regs_n <= 0)
 			ABORT_LIFT;
-		int lane_sz = REGSZ(regs[0]);
-		for (int i = 0; i < regs_n; ++i)
+		int i, lane_sz = REGSZ(regs[0]);
+		for (i = 0; i < regs_n; ++i)
 			il.AddInstruction(ILSETREG(regs[i], ExtractRegister(il, operand2, 0, lane_sz, 0, lane_sz)));
 	}
 	break;

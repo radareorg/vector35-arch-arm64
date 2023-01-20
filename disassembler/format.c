@@ -487,10 +487,11 @@ int aarch64_disassemble(Instruction *instruction, char *buf, size_t buf_sz)
 	if (operation == NULL)
 		return FAILED_TO_DISASSEMBLE_OPERATION;
 
-	for(int i=0; i<MAX_OPERANDS; i++)
+	int i;
+	for(i=0; i<MAX_OPERANDS; i++)
 		memset(&(operandStrings[i][0]), 0, 128);
 
-	for(int i=0; i<MAX_OPERANDS && instruction->operands[i].operandClass != NONE; i++)
+	for(i=0; i<MAX_OPERANDS && instruction->operands[i].operandClass != NONE; i++)
 	{
 		switch (instruction->operands[i].operandClass)
 		{

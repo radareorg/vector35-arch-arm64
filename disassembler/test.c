@@ -184,7 +184,7 @@ char* shifttype_to_str(enum ShiftType st)
 
 int disassemble(uint64_t address, uint32_t insword, char* result)
 {
-	int rc;
+	int i, rc;
 	Instruction instr;
 	memset(&instr, 0, sizeof(instr));
 
@@ -200,7 +200,7 @@ int disassemble(uint64_t address, uint32_t insword, char* result)
 		printf(" instr.encoding: %d %s\n", instr.encoding, enc_to_str(instr.encoding));
 		printf("instr.operation: %d %s\n", instr.operation, operation_to_str(instr.operation));
 		printf(" instr.setflags: %d\n", instr.setflags);
-		for (int i = 0; i < MAX_OPERANDS && instr.operands[i].operandClass != NONE; i++)
+		for (i = 0; i < MAX_OPERANDS && instr.operands[i].operandClass != NONE; i++)
 		{
 			printf("instr.operands[%d]\n", i);
 
@@ -265,7 +265,8 @@ int main(int ac, char** av)
 	if (!strcmp(av[1], "speed"))
 	{
 		srand(0xCAFE);
-		for (int i = 0; i < 10000000; i++)
+		int i;
+		for (i = 0; i < 10000000; i++)
 		{
 			uint32_t insword = (rand() << 16) ^ rand();
 			disassemble(0, insword, instxt);
@@ -278,7 +279,8 @@ int main(int ac, char** av)
 	    !strcmp(av[1], "stresser"))
 	{
 		verbose = 0;
-		for (uint32_t insword = 0; insword != 0xFFFFFFFF; insword++)
+		uint32_t insword;
+		for (insword = 0; insword != 0xFFFFFFFF; insword++)
 		{
 			disassemble(0, insword, instxt);
 

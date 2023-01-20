@@ -782,7 +782,8 @@ class Arm64Architecture : public Architecture
 
 		result.emplace_back(InstructionToken, operation);
 		result.emplace_back(TextToken, buf);
-		for (size_t i = 0; i < MAX_OPERANDS; i++)
+		size_t i;
+		for (i = 0; i < MAX_OPERANDS; i++)
 		{
 			if (instr.operands[i].operandClass == NONE)
 				return true;
@@ -1120,7 +1121,8 @@ class Arm64Architecture : public Architecture
 		uint32_t arm64_nop = 0xd503201f;
 		if (len < sizeof(arm64_nop))
 			return false;
-		for (size_t i = 0; i < len / sizeof(arm64_nop); i++)
+		size_t i;
+		for (i = 0; i < len / sizeof(arm64_nop); i++)
 			((uint32_t*)data)[i] = arm64_nop;
 		return true;
 	}
@@ -2288,7 +2290,8 @@ class Arm64Architecture : public Architecture
 	{
 		vector<uint32_t> system_regs = {};
 
-		for (uint32_t ii = SYSREG_NONE + 1; ii < SYSREG_END; ++ii)
+		uint32_t ii;
+		for (ii = SYSREG_NONE + 1; ii < SYSREG_END; ++ii)
 		{
 			system_regs.push_back(ii);
 		}
@@ -2786,7 +2789,8 @@ class Arm64MachoRelocationHandler : public RelocationHandler
 		(void)arch;
 
 		set<MachoArm64RelocationType> unsupportedRelocations;
-		for (size_t i = 0; i < result.size(); i++)
+		size_t i;
+		for (i = 0; i < result.size(); i++)
 		{
 			result[i].type = StandardRelocationType;
 			switch (result[i].nativeType)

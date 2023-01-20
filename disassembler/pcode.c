@@ -124,7 +124,8 @@ bool MoveWidePreferred(uint32_t sf, uint32_t immN, uint32_t immS, uint32_t immR)
 
 int HighestSetBit(uint64_t x)
 {
-	for (int i = 63; i >= 0 && x; --i)
+	int i;
+	for (i = 63; i >= 0 && x; --i)
 	{
 		if (x & 0x8000000000000000)
 			return i;
@@ -136,7 +137,8 @@ int HighestSetBit(uint64_t x)
 
 int LowestSetBit(uint64_t x)
 {
-	for (int i = 0; i < 64; ++i)
+	int i;
+	for (i = 0; i < 64; ++i)
 	{
 		if (x & 1)
 			return i;
@@ -375,7 +377,8 @@ uint64_t Replicate(uint64_t val, uint8_t times, uint64_t width)
 	}
 	// Slow path
 	uint64_t orig = val;
-	for (size_t i = 0; i < times; ++i)
+	size_t i;
+	for (i = 0; i < times; ++i)
 	{
 		val <<= width;
 		val |= orig;
