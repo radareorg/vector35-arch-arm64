@@ -582,6 +582,7 @@ uint64_t FPOne(bool sign, int N)
 uint64_t FPTwo(bool sign, int N)
 {
 	// width should be 16, 32, 64
+	//int F;
 	int E, exp;
 
 	switch (N)
@@ -594,9 +595,6 @@ uint64_t FPTwo(bool sign, int N)
 		E = 11;
 	}
 
-#if UNUSED
-	int F = N - (E + 1);
-#endif
 	exp = 1 << (E - 1);
 	return (sign << E)|exp;
 }
