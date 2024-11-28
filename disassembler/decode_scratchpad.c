@@ -1075,9 +1075,12 @@ const char* reg_lookup_c[16] = {"c0", "c1", "c2", "c3", "c4", "c5", "c6", "c7", 
 	instr->operands[i].immediate = VALUE; \
 	i++;
 
+union FloatImm { uint64_t uli; unsigned int ui; float fn; };
+
 #define ADD_OPERAND_FLOAT32(VALUE) \
 	instr->operands[i].operandClass = FIMM32; \
-	*(float*)&(instr->operands[i].immediate) = VALUE; \
+	union FloatImm *v = (union FloatImm*) &(instr->operands[i].immediate); \
+	v->ui = (unsigned int) VALUE; \
 	i++;
 
 #define ADD_OPERAND_CONST  ADD_OPERAND_IMM64(const_, 0)
